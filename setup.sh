@@ -7,7 +7,8 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 apt-get update
 apt-cache policy docker-ce
 apt-get install -y docker-ce
-systemctl status docker
+apt-get install -y docker-compose
+#systemctl status docker
 #sudo groupadd docker
 usermod -aG docker ubuntu
 docker pull wsoyinka/elastic-stack
