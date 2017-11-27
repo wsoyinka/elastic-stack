@@ -1,0 +1,83 @@
+#elk:
+#  image: sebp/elk
+#  ports:
+#    - "15601:5601"
+#    - "19200:9200"
+#    - "15044:5044"
+
+
+version: '2'
+services:
+  elasticsearch_master:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.0.0
+    container_name: elasticsearch_master
+    environment:
+      - cluster.name=docker-cluster
+#      - http.host=0.0.0.0
+#      - transport.host=127.0.0.1
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch_master"
+      - "network.host=_site_"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - esnet
+
+  elasticsearch_node1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.0.0
+    container_name: elasticsearch_node1
+    depends_on:
+      - elasticsearch_master
+    healthcheck:
+     test: ["CMD", "curl", "-f", "http://localhost:9200"]
+     interval: 2s
+     timeout: 20s
+     retries: 1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - discovery.zen.ping.unicast.hosts=elasticsearch_master
+#      - http.host=0.0.0.0
+#      - transport.host=127.0.0.1
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+
+  logstash-kibana:
+    build: .
+    image: wsoyinka/elkv3
+    container_name: logstash-kibana
+    depends_on: ['elasticsearch_node1']
+    ports:
+      - "35601:5601"
+#      - "39200:9200"
+      - "35044:5044"
+    environment:
+      - ELASTICSEARCH_START=0
+      - CLUSTER_NAME=docker-cluster
+    networks:
+      - esnet
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+
+networks:
+  esnet:
+    driver: bridge
