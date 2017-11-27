@@ -52,11 +52,11 @@ services:
     networks:
       - esnet
 
-  logstash-kibana:
+  elastic-stack:
     build: .
-    image: wsoyinka/elkv3
-    container_name: logstash-kibana
-    depends_on: ['elasticsearch_node1']
+    image: wsoyinka/elastic-stack
+    container_name: elastic-stack
+#    depends_on: ['elasticsearch_node1']
     ports:
       - "39200:9200"
       - "35601:5601"
