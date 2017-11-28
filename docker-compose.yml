@@ -70,6 +70,7 @@ services:
 
   nginx:
     image: nginx:latest
+    container_name: nginx
     restart: unless-stopped
     volumes:
       - ./nginx/config:/etc/nginx/conf.d:ro,Z
