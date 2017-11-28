@@ -68,7 +68,7 @@ services:
     networks:
       - esnet
 
-nginx:
+  nginx:
     image: nginx:latest
     restart: unless-stopped
     volumes:
