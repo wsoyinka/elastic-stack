@@ -59,7 +59,7 @@ services:
 #    depends_on: ['elasticsearch_node1']
     ports:
       - "39200:9200"
-      - "35601:5601"
+#      - "35601:5601"
 #      - "39200:9200"
       - "35044:5044"
     environment:
