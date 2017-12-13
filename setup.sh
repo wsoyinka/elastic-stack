@@ -7,7 +7,11 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 apt-get update
 apt-cache policy docker-ce
 apt-get install -y docker-ce
-apt-get install -y docker-compose
+
+curl -sS -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+#apt-get install -y docker-compose
 usermod -aG docker ubuntu
 sysctl -w vm.max_map_count=262144
 git clone https://github.com/wsoyinka/elastic-stack.git
